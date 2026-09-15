@@ -1,0 +1,238 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+model User {
+  id String @id
+  name String
+  email String @unique
+  emailVerified Boolean @default(false)
+  image String?
+  role String @default("STAFF")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  sessions Session[]
+  accounts Account[]
+}
+model Session {
+  id String @id
+  expiresAt DateTime
+  token String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId String
+  user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+  @@index([userId])
+}
+model Account {
+  id String @id
+  accountId String
+  providerId String
+  userId String
+  user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+  accessToken String?
+  refreshToken String?
+  idToken String?
+  accessTokenExpiresAt DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope String?
+  password String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([userId])
+}
+model Verification {
+  id String @id
+  identifier String
+  value String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model Category {
+  id String @id
+  name String
+  products Product[]
+}
+model Product {
+  id String @id @default(cuid())
+  name String
+  description String @default("")
+  categoryId String
+  category Category @relation(fields:[categoryId],references:[id])
+  price Int
+  stock Int @default(0)
+  units Int @default(1)
+  active Boolean @default(true)
+  image String @default("/images/hero.webp")
+  cutout String?
+  compatibleBoxes String[]
+  variants Json @default("[]")
+  updatedAt DateTime @updatedAt
+  reservations Reservation[]
+  movements InventoryMovement[]
+  components GiftComponent[]
+  @@index([categoryId,active])
+}
+model Box {
+  id String @id
+  name String
+  dimensions String
+  price Int
+  capacity Int
+  colors String[]
+  active Boolean @default(true)
+  image String @default("/images/hero.webp")
+  gifts Gift[]
+}
+model Packaging {
+  id String @id
+  kind String
+  name String
+  color String
+  price Int @default(0)
+  active Boolean @default(true)
+}
+model Gift {
+  id String @id @default(cuid())
+  slug String @unique
+  name String
+  description String
+  occasion String
+  boxId String
+  box Box @relation(fields:[boxId],references:[id])
+  image String
+  featured Boolean @default(false)
+  position Int @default(0)
+  active Boolean @default(true)
+  components GiftComponent[]
+}
+model GiftComponent {
+  id String @id @default(cuid())
+  giftId String
+  gift Gift @relation(fields:[giftId],references:[id],onDelete:Cascade)
+  productId String
+  product Product @relation(fields:[productId],references:[id])
+  quantity Int
+  @@unique([giftId,productId])
+}
+model Order {
+  id String @id @default(cuid())
+  reference String @unique
+  idempotencyKey String @unique
+  requestHash String
+  tokenHash String @unique
+  status String @default("NEW")
+  paymentStatus String @default("UNPAID")
+  total Int
+  deliveryFee Int
+  customer Json
+  delivery Json
+  note String
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  releasedAt DateTime?
+  items OrderItem[]
+  reservations Reservation[]
+  history OrderHistory[]
+  payments Payment[]
+  @@index([status,createdAt])
+}
+model OrderItem {
+  id String @id @default(cuid())
+  orderId String
+  order Order @relation(fields:[orderId],references:[id])
+  quantity Int
+  total Int
+  snapshot Json
+  @@index([orderId])
+}
+model Reservation {
+  id String @id @default(cuid())
+  orderId String
+  order Order @relation(fields:[orderId],references:[id])
+  productId String
+  product Product @relation(fields:[productId],references:[id])
+  quantity Int
+  @@unique([orderId,productId])
+}
+model InventoryMovement {
+  id String @id @default(cuid())
+  productId String
+  product Product @relation(fields:[productId],references:[id])
+  delta Int
+  reason String
+  createdAt DateTime @default(now())
+}
+model DeliveryZone {
+  id String @id @default(cuid())
+  name String
+  fee Int
+  active Boolean @default(true)
+}
+model DeliverySlot {
+  id String @id @default(cuid())
+  date String
+  label String
+  capacity Int
+  reserved Int @default(0)
+  @@unique([date,label])
+}
+model OrderHistory {
+  id String @id @default(cuid())
+  orderId String
+  order Order @relation(fields:[orderId],references:[id])
+  status String
+  note String
+  createdAt DateTime @default(now())
+  @@index([orderId])
+}
+model Payment {
+  id String @id @default(cuid())
+  orderId String
+  order Order @relation(fields:[orderId],references:[id])
+  amount Int
+  actorId String
+  createdAt DateTime @default(now())
+  @@index([orderId])
+}
+model Inquiry {
+  id String @id @default(cuid())
+  name String
+  email String
+  message String
+  createdAt DateTime @default(now())
+  @@index([createdAt])
+}
+model Settings {
+  id String @id @default("store")
+  data Json
+}
+model AuditLog {
+  id String @id @default(cuid())
+  actorId String
+  action String
+  entityId String
+  detail Json
+  createdAt DateTime @default(now())
+  @@index([createdAt])
+}
+model RateLimit {
+  key String @id
+  count Int
+  expiresAt DateTime
+}
+model Notification {
+  id String @id @default(cuid())
+  reference String @unique
+  attempts Int @default(0)
+  sentAt DateTime?
+  nextAttemptAt DateTime @default(now())
+  createdAt DateTime @default(now())
+  @@index([sentAt,nextAttemptAt])
+}

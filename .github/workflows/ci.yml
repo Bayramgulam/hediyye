@@ -1,0 +1,49 @@
+name: LUMA checks
+on: [push, pull_request]
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: luma
+          POSTGRES_PASSWORD: luma_local_only
+          POSTGRES_DB: luma
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U luma"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://luma:luma_local_only@localhost:5432/luma
+      BETTER_AUTH_SECRET: isolated-ci-secret-not-used-for-production-123456
+      BETTER_AUTH_URL: http://localhost:3000
+      NEXT_PUBLIC_SITE_URL: http://localhost:3000
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx prisma generate
+      - run: npm run db:migrate
+      - run: npm run db:seed
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+        env:
+          RUN_DB_TESTS: '1'
+      - run: npm run db:verify-migrations
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run dev > /tmp/luma-dev.log 2>&1 &
+      - run: npx wait-on http://localhost:3000/api/health
+      - run: npm run test:e2e
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: browser-checks
+          path: |
+            playwright-report
+            artifacts/screenshots
