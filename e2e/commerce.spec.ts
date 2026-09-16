@@ -11,6 +11,7 @@ const uid = randomUUID(),
 const password = randomBytes(24).toString("hex");
 const email = `${uid}@example.test`;
 const staffEmail = `${staffId}@example.test`;
+const appOrigin = process.env.E2E_BASE_URL || "http://localhost:3000";
 let settings: Prisma.JsonValue;
 let slotId = "";
 let orderId = "";
@@ -227,7 +228,7 @@ test("stock, input validation, origin checks, and staff permissions", async ({
   await expect(page.locator("input[name=name]:invalid")).toHaveCount(1);
   const denied = await request.post("/api/admin", {
     data: { action: "settings", data: {} },
-    headers: { Origin: "http://localhost:3000" },
+    headers: { Origin: appOrigin },
   });
   expect(denied.status()).toBe(401);
   const csrf = await request.post("/api/contact", {
@@ -244,7 +245,7 @@ test("stock, input validation, origin checks, and staff permissions", async ({
   ).toBeVisible();
   const staffDenied = await page.request.post("/api/admin", {
     data: { action: "settings", data: {} },
-    headers: { Origin: "http://localhost:3000" },
+    headers: { Origin: appOrigin },
   });
   expect(staffDenied.status()).toBe(403);
   await page.goto("/izle/" + "a".repeat(64));

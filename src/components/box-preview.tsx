@@ -46,7 +46,12 @@ export function BoxPreview({
                     exit={{ opacity: 0, scale: 0.8 }}
                     transition={{ duration: 0.25 }}
                   >
-                    <img src={p.cutout || p.image} alt={p.name} />
+                    <img
+                      src={p.cutout || p.image}
+                      alt={p.name}
+                      width="240"
+                      height="240"
+                    />
                   </motion.div>
                 ),
             )}

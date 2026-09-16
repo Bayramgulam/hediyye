@@ -21,8 +21,8 @@ export function StorefrontMotion({ children }: { children: ReactNode }) {
             [
               {
                 opacity: 0,
-                filter: "blur(7px)",
-                transform: "translateY(46px) scale(.975)",
+                filter: "blur(2px)",
+                transform: "translateY(18px) scale(.99)",
               },
               {
                 opacity: 1,
@@ -31,7 +31,7 @@ export function StorefrontMotion({ children }: { children: ReactNode }) {
               },
             ],
             {
-              duration: 920,
+              duration: 560,
               delay: delays.get(entry.target) || 0,
               easing: "cubic-bezier(.16,1,.3,1)",
               fill: "backwards",
@@ -41,14 +41,14 @@ export function StorefrontMotion({ children }: { children: ReactNode }) {
           animation.onfinish = () => animations.delete(animation);
         }
       },
-      { threshold: 0.08 },
+      { threshold: 0.12 },
     );
     root.current
       ?.querySelectorAll(
         ".section-heading, .gift-card, .intro-image, .intro-copy, .occasions > h2, .occasion-grid > a, .how > div:first-child, .steps-story > div, .packaging-story > img, .packaging-story > div, .faq > div",
       )
       .forEach((el, index) => {
-        delays.set(el, (index % 3) * 75);
+        delays.set(el, (index % 3) * 45);
         observer.observe(el);
       });
     const stop = () => {

@@ -45,7 +45,7 @@ export function Builder({
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
-  const [expand, setExpand] = useState(true);
+  const [expand, setExpand] = useState(false);
   const initialized = useRef(false);
   useEffect(() => {
     if (initialized.current) return;
@@ -142,15 +142,25 @@ export function Builder({
         </h1>
         <p>Hər seçimlə ona bir az daha özəl.</p>
       </div>
+      <div className="builder-mobile-progress" role="status" aria-live="polite">
+        <span>ADDIM {step} / 5</span>
+        <strong>{titles[step - 1]}</strong>
+        <div aria-hidden="true">
+          <span style={{ width: `${step * 20}%` }} />
+        </div>
+      </div>
       <ol className="builder-steps">
         {titles.map((t, i) => (
           <li key={t}>
             <button
               onClick={() => go(i + 1)}
               aria-current={step === i + 1 ? "step" : undefined}
+              aria-label={`${i + 1}. addım: ${t}`}
             >
-              <span>{step > i + 1 ? <Check size={14} /> : i + 1}</span>
-              {t}
+              <span className="step-number">
+                {step > i + 1 ? <Check size={14} /> : i + 1}
+              </span>
+              <span className="step-label">{t}</span>
             </button>
           </li>
         ))}
@@ -219,7 +229,7 @@ export function Builder({
                       })
                     }
                   >
-                    <img src={b.image} alt="" />
+                    <img src={b.image} alt="" width="72" height="72" />
                     <span>
                       <strong>{b.name}</strong>
                       <small>
@@ -291,7 +301,13 @@ export function Builder({
                         ?.quantity || 0;
                     return (
                       <article key={p.id}>
-                        <img src={p.image} alt={p.name} loading="lazy" />
+                        <img
+                          src={p.image}
+                          alt={p.name}
+                          loading="lazy"
+                          width="420"
+                          height="330"
+                        />
                         <h4>{p.name}</h4>
                         <div>
                           <span>{money(p.price)}</span>

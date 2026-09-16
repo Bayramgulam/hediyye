@@ -6,6 +6,7 @@ export function Contact() {
   return (
     <form
       className="form-stack"
+      aria-busy={busy}
       onSubmit={async (e) => {
         e.preventDefault();
         setBusy(true);
@@ -54,7 +55,11 @@ export function Contact() {
       <button className="button" disabled={busy}>
         {busy ? "Göndərilir..." : "Mesajı göndər ↗"}
       </button>
-      {message && <p role="status">{message}</p>}
+      {message && (
+        <p className="status-message" role="status" aria-live="polite">
+          {message}
+        </p>
+      )}
     </form>
   );
 }

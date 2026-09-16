@@ -817,6 +817,7 @@ export default async function Page({
           <Link
             key={key}
             href={key === "dashboard" ? "/admin" : "/admin/" + key}
+            aria-current={section === key ? "page" : undefined}
           >
             {name}
           </Link>

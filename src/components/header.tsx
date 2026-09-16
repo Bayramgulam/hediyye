@@ -1,8 +1,10 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { ShoppingBag, Menu, X, ArrowUpRight } from "lucide-react";
 export function Header({ brand, logo }: { brand: string; logo?: string }) {
+  const pathname = usePathname();
   const [count, setCount] = useState(0);
   const [open, setOpen] = useState(false);
   useEffect(() => {
@@ -29,6 +31,25 @@ export function Header({ brand, logo }: { brand: string; logo?: string }) {
       window.removeEventListener("storage", update);
     };
   }, []);
+  useEffect(() => setOpen(false), [pathname]);
+  useEffect(() => {
+    if (!open) return;
+    const close = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    document.body.classList.add("menu-open");
+    window.addEventListener("keydown", close);
+    return () => {
+      document.body.classList.remove("menu-open");
+      window.removeEventListener("keydown", close);
+    };
+  }, [open]);
+  const links = [
+    { href: "/hediyyeler", label: "Hədiyyələr" },
+    { href: "/qutunu-yarat", label: "Öz qutunu yarat", featured: true },
+    { href: "/#nece-isleyir", label: "Necə işləyir" },
+    { href: "/elaqe", label: "Əlaqə" },
+  ];
   return (
     <>
       <div className="announcement">
@@ -49,19 +70,28 @@ export function Header({ brand, logo }: { brand: string; logo?: string }) {
             </>
           )}
         </Link>
-        <nav className={open ? "nav open" : "nav"} aria-label="Əsas naviqasiya">
-          <Link onClick={() => setOpen(false)} href="/hediyyeler">
-            Hədiyyələr
-          </Link>
-          <Link onClick={() => setOpen(false)} href="/qutunu-yarat">
-            Öz qutunu yarat <ArrowUpRight size={14} />
-          </Link>
-          <Link onClick={() => setOpen(false)} href="/#nece-isleyir">
-            Necə işləyir
-          </Link>
-          <Link onClick={() => setOpen(false)} href="/elaqe">
-            Əlaqə
-          </Link>
+        <nav
+          id="primary-navigation"
+          className={open ? "nav open" : "nav"}
+          aria-label="Əsas naviqasiya"
+        >
+          {links.map(({ href, label, featured }) => {
+            const route = href.split("#")[0];
+            const current =
+              route !== "/" &&
+              (pathname === route || pathname.startsWith(route + "/"));
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={featured ? "nav-featured" : undefined}
+                aria-current={current ? "page" : undefined}
+              >
+                {label}
+                {featured && <ArrowUpRight size={14} />}
+              </Link>
+            );
+          })}
         </nav>
         <div className="header-actions">
           <span className="locale">AZ / ₼</span>
@@ -79,6 +109,7 @@ export function Header({ brand, logo }: { brand: string; logo?: string }) {
             className="menu-toggle icon-button"
             aria-label={open ? "Menyunu bağla" : "Menyunu aç"}
             aria-expanded={open}
+            aria-controls="primary-navigation"
             onClick={() => setOpen(!open)}
           >
             {open ? <X /> : <Menu />}

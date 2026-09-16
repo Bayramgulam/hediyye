@@ -28,12 +28,14 @@ export function Checkout({
   const [zone, setZone] = useState(zones[0]?.id || "");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [ready, setReady] = useState(false);
   const key = useRef("");
   useEffect(() => {
     setItems(readCart());
     key.current =
       sessionStorage.getItem("luma-checkout-key") || crypto.randomUUID();
     sessionStorage.setItem("luma-checkout-key", key.current);
+    setReady(true);
   }, []);
   let total = 0;
   try {
@@ -48,6 +50,33 @@ export function Checkout({
     method === "delivery"
       ? settings.delivery && settings.cashDelivery
       : settings.pickup && settings.cashPickup;
+  if (!ready)
+    return (
+      <section className="section inline-loading" role="status">
+        <span />
+        Sifariş məlumatları hazırlanır...
+      </section>
+    );
+  if (!items.length)
+    return (
+      <section className="section checkout-page">
+        <span className="eyebrow">SİFARİŞƏ BAŞLAMAQ ÜÇÜN</span>
+        <h1>
+          Əvvəlcə <em>hədiyyəni seç.</em>
+        </h1>
+        <div className="empty-state compact-empty">
+          <p>Səbətin boşdur. Öz qutunu hazırla və ya hazır seçimlərə bax.</p>
+          <div className="empty-actions">
+            <Link className="button" href="/qutunu-yarat">
+              Öz qutunu yarat →
+            </Link>
+            <Link className="text-link" href="/hediyyeler">
+              Hazır hədiyyələr
+            </Link>
+          </div>
+        </div>
+      </section>
+    );
   async function submit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     setBusy(true);
@@ -113,7 +142,9 @@ export function Checkout({
             </label>
           </div>
           <label>
-            E-poçt <small>(istəyə görə)</small>
+            <span>
+              E-poçt <small>(istəyə görə)</small>
+            </span>
             <input name="email" type="email" autoComplete="email" />
           </label>
           <h3>Hədiyyə kimə çatır?</h3>
@@ -197,7 +228,9 @@ export function Checkout({
             </select>
           </label>
           <label>
-            Əlavə qeyd <small>(istəyə görə)</small>
+            <span>
+              Əlavə qeyd <small>(istəyə görə)</small>
+            </span>
             <textarea name="note" maxLength={1000} />
           </label>
           <p className="muted">
@@ -234,6 +267,12 @@ export function Checkout({
                 : "Çatdırılma zamanı nağd ödəniş"
               : "Mağaza sifariş qəbulunu hələ aktivləşdirməyib."}
           </p>
+          {!slots.length && (
+            <p className="availability-note" role="status">
+              Hazırda seçilə bilən təhvil vaxtı yoxdur. Yeni vaxt üçün bizimlə
+              əlaqə saxla.
+            </p>
+          )}
           <label className="check-label">
             <input type="checkbox" required />{" "}
             <span>
