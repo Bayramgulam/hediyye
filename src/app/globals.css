@@ -3647,6 +3647,303 @@ footer {
   }
 }
 
+/* Readability and motion refinement inspired by editorial design systems */
+body {
+  font-size: 15px;
+}
+.announcement {
+  font-size: 12px;
+}
+.wordmark span {
+  font-size: 9px;
+}
+.nav {
+  font-size: 13px;
+}
+.locale,
+.cart-link span {
+  font-size: 12px;
+}
+.button,
+.text-link {
+  font-size: 13px;
+}
+.eyebrow {
+  font-size: 11px;
+}
+.hero {
+  isolation: isolate;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background-image: radial-gradient(#642c3b1c 0.75px, transparent 0.75px);
+  background-size: 17px 17px;
+  mask-image: linear-gradient(90deg, #000 0, transparent 58%);
+  pointer-events: none;
+}
+.hero-copy > p {
+  max-width: 350px;
+  font-size: 15px;
+}
+.hero h1 em {
+  position: relative;
+  isolation: isolate;
+  white-space: nowrap;
+}
+.hero h1 em::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  right: -0.06em;
+  bottom: 0.06em;
+  left: -0.04em;
+  height: 0.12em;
+  border-radius: 999px;
+  background: #d7b7aeaa;
+  transform: scaleX(0) rotate(-1.5deg);
+  transform-origin: left;
+  animation: accent-draw 0.85s 0.88s var(--ease-out) forwards;
+}
+.hero-note {
+  font-size: 11px;
+}
+.hero-bottom {
+  font-size: 9px;
+}
+.benefit-strip span {
+  font-size: 12px;
+}
+.benefit-strip span svg {
+  animation: benefit-icon-float 4.2s ease-in-out infinite;
+}
+.benefit-strip span:nth-of-type(2) svg {
+  animation-delay: -1.4s;
+}
+.benefit-strip span:nth-of-type(3) svg {
+  animation-delay: -2.8s;
+}
+.gift-tag {
+  font-size: 10px;
+}
+.gift-title > span {
+  font-size: 13px;
+}
+.gift-card > p {
+  font-size: 13px;
+  line-height: 1.72;
+}
+.gift-card-footer {
+  font-size: 11px;
+}
+.gift-card-footer a {
+  font-size: 11px;
+}
+.gift-card:hover .gift-title h3 {
+  color: var(--accent);
+}
+.gift-title h3 {
+  transition: color 0.3s ease;
+}
+.intro-copy > p,
+.packaging-story p {
+  font-size: 14px;
+}
+.mini-products span {
+  font-size: 10px;
+}
+.occasion-number,
+.steps-story p {
+  font-size: 13px;
+}
+.occasion-grid svg {
+  transition: transform 0.35s var(--ease-out);
+}
+.occasion-grid > a:hover svg {
+  transform: translate(5px, -5px) rotate(4deg);
+}
+.faq summary {
+  font-size: 14px;
+}
+.faq details p {
+  font-size: 13px;
+}
+.faq details[open] p {
+  animation: faq-answer-in 0.42s var(--ease-out) both;
+}
+.footer-top p,
+.footer-links {
+  font-size: 12px;
+}
+.footer-toggle,
+.footer-bottom {
+  font-size: 10px;
+}
+.builder-heading p {
+  font-size: 13px;
+}
+.builder-steps button {
+  font-size: 12px;
+}
+.capacity {
+  font-size: 11px;
+}
+.capacity small,
+.step-title > span,
+.box-option small,
+.selected-product strong,
+.selected-product small,
+.summary-gift-item small {
+  font-size: 10px;
+}
+.step-title p,
+.product-picker h4,
+.review li,
+.review p,
+.contents-list li,
+.order-summary > div,
+.order-summary p,
+.muted {
+  font-size: 13px;
+}
+.box-option strong {
+  font-size: 13px;
+}
+.box-option > b,
+.product-picker article > div,
+.catalog-tools p {
+  font-size: 12px;
+}
+.category-tabs button,
+.catalog-filters > a,
+.selected-products-heading,
+.filters-toggle,
+.active-filters a {
+  font-size: 11px;
+}
+.form-stack label,
+.catalog-filters label {
+  font-size: 13px;
+}
+.form-stack input,
+.form-stack textarea,
+.form-stack select,
+.catalog-filters input,
+.catalog-filters select {
+  font-size: 14px;
+}
+.selection-feedback {
+  font-size: 11px;
+}
+.studio-image-note span:first-child,
+.studio-card-one span,
+.studio-card-two span,
+.studio-index,
+.studio-caption {
+  font-size: 8px;
+}
+
+@keyframes accent-draw {
+  to {
+    transform: scaleX(1) rotate(-1.5deg);
+  }
+}
+@keyframes benefit-icon-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0);
+  }
+  50% {
+    transform: translateY(-3px) rotate(-4deg);
+  }
+}
+@keyframes faq-answer-in {
+  from {
+    opacity: 0;
+    transform: translateY(-7px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 767px) {
+  .announcement {
+    font-size: 10px;
+  }
+  .wordmark span {
+    font-size: 8px;
+  }
+  .hero-copy .eyebrow,
+  .eyebrow {
+    font-size: 9px;
+  }
+  .hero-copy > p {
+    max-width: 330px;
+    font-size: 14px;
+    line-height: 1.72;
+  }
+  .hero-copy > .button,
+  .hero-copy > .text-link {
+    font-size: 12px;
+  }
+  .benefit-strip span {
+    font-size: 10px;
+  }
+  .gift-card > p,
+  .steps-story p,
+  .faq details p {
+    font-size: 13px;
+  }
+  .gift-card-footer,
+  .gift-card-footer a {
+    font-size: 11px;
+  }
+  .footer-bottom {
+    font-size: 10px;
+  }
+  .builder-heading p,
+  .step-title p {
+    font-size: 12px;
+  }
+  .builder-mobile-progress > span,
+  .builder-bottom small,
+  .preview-disclaimer {
+    font-size: 9px;
+  }
+  .builder-mobile-progress > strong,
+  .capacity,
+  .capacity small,
+  .box-option strong,
+  .box-option b,
+  .box-option small,
+  .selected-product strong,
+  .selected-product small,
+  .catalog-tools p,
+  .filters-toggle,
+  .active-filters a {
+    font-size: 10px;
+  }
+  .product-picker h4,
+  .product-picker article > div {
+    font-size: 11px;
+  }
+  .form-stack label,
+  .catalog-filters label {
+    font-size: 12px;
+  }
+  .form-stack input,
+  .form-stack textarea,
+  .form-stack select,
+  .catalog-filters input,
+  .catalog-filters select {
+    font-size: 16px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
