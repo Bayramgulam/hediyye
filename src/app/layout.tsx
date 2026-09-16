@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { Header } from "@/components/header";
 import { StorefrontMotion } from "@/components/storefront-motion";
 import { OpeningScene } from "@/components/opening-scene";
+import { SiteFooter } from "@/components/site-footer";
 import { getSettings } from "@/lib/catalog";
 import { getSiteUrl } from "@/lib/site-url";
-import Link from "next/link";
 import "@fontsource/noto-serif/latin-400.css";
 import "@fontsource/noto-serif/latin-ext-400.css";
 import "@fontsource/noto-serif/latin-400-italic.css";
@@ -43,46 +43,7 @@ export default async function RootLayout({
         <main id="main">
           <StorefrontMotion>{children}</StorefrontMotion>
         </main>
-        <footer>
-          <div className="footer-top">
-            <div>
-              <Link href="/" className="wordmark">
-                {s.brand.toLowerCase()}
-              </Link>
-              <p>
-                Hədiyyənin ən gözəl tərəfi —<br />
-                arxasındakı düşüncədir.
-              </p>
-            </div>
-            <div>
-              <small>KƏŞF ET</small>
-              <Link href="/hediyyeler">Hazır hədiyyələr</Link>
-              <Link href="/qutunu-yarat">Öz qutunu yarat</Link>
-              <Link href="/elaqe">Bizimlə əlaqə</Link>
-            </div>
-            <div>
-              <small>MƏLUMAT</small>
-              <Link href="/catdirilma">Çatdırılma və təhvil</Link>
-              <Link href="/mexfilik">Məxfilik</Link>
-              <Link href="/sertler">İstifadə şərtləri</Link>
-            </div>
-            <div>
-              <small>BİZƏ YAZ</small>
-              {s.email ? (
-                <a href={`mailto:${s.email}`}>{s.email}</a>
-              ) : (
-                <Link href="/elaqe">Sualını bizimlə bölüş</Link>
-              )}
-              {s.instagram && <a href={s.instagram}>Instagram ↗</a>}
-            </div>
-          </div>
-          <div className="footer-bottom">
-            <span>
-              © {new Date().getFullYear()} {s.brand}. Düşünülərək hazırlanıb.
-            </span>
-            <span>Azərbaycan · AZN</span>
-          </div>
-        </footer>
+        <SiteFooter brand={s.brand} email={s.email} instagram={s.instagram} />
       </body>
     </html>
   );

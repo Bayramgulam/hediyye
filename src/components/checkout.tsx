@@ -136,6 +136,9 @@ export function Checkout({
                 name="phone"
                 required
                 type="tel"
+                inputMode="tel"
+                pattern="[+0-9\\s()\\-]{7,20}"
+                title="Telefon nömrəsini düzgün formatda yaz"
                 placeholder="+994 50 123 45 67"
                 autoComplete="tel"
               />
@@ -158,6 +161,9 @@ export function Checkout({
               <input
                 name="recipientPhone"
                 type="tel"
+                inputMode="tel"
+                pattern="[+0-9\\s()\\-]{7,20}"
+                title="Telefon nömrəsini düzgün formatda yaz"
                 required={method === "delivery"}
                 placeholder="+994 50 123 45 67"
               />
@@ -239,14 +245,28 @@ export function Checkout({
         </div>
         <aside className="order-summary">
           <h3>Sənin hədiyyən</h3>
-          {items.map((i) => (
-            <div key={i.id}>
-              <span>
-                {catalog.boxes.find((b) => b.id === i.config.boxId)?.name} ×{" "}
-                {i.quantity}
-              </span>
-            </div>
-          ))}
+          <div className="summary-gifts">
+            {items.map((i) => {
+              const box = catalog.boxes.find((b) => b.id === i.config.boxId);
+              const pieces = i.config.items.reduce(
+                (sum, item) => sum + item.quantity,
+                0,
+              );
+              return (
+                <div className="summary-gift-item" key={i.id}>
+                  {box?.image && (
+                    <img src={box.image} alt="" width="64" height="64" />
+                  )}
+                  <span>
+                    <strong>{box?.name}</strong>
+                    <small>
+                      {pieces} məhsul · {i.quantity} qutu
+                    </small>
+                  </span>
+                </div>
+              );
+            })}
+          </div>
           <hr />
           <div>
             <span>Hədiyyələr</span>
@@ -267,10 +287,15 @@ export function Checkout({
                 : "Çatdırılma zamanı nağd ödəniş"
               : "Mağaza sifariş qəbulunu hələ aktivləşdirməyib."}
           </p>
-          {!slots.length && (
-            <p className="availability-note" role="status">
-              Hazırda seçilə bilən təhvil vaxtı yoxdur. Yeni vaxt üçün bizimlə
-              əlaqə saxla.
+          {(!enabled || !slots.length) && (
+            <p
+              className="availability-note"
+              role="status"
+              id="checkout-unavailable"
+            >
+              {!enabled
+                ? "Bu təhvil üsulu üçün sifariş qəbulu hazırda bağlıdır."
+                : "Hazırda seçilə bilən təhvil vaxtı yoxdur. Yeni vaxt üçün bizimlə əlaqə saxla."}
             </p>
           )}
           <label className="check-label">
@@ -283,6 +308,9 @@ export function Checkout({
           <button
             className="button"
             disabled={busy || !enabled || !items.length || !slots.length}
+            aria-describedby={
+              !enabled || !slots.length ? "checkout-unavailable" : undefined
+            }
           >
             {busy ? "Sifariş göndərilir..." : "Sifarişi tamamla →"}
           </button>

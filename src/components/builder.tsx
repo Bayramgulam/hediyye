@@ -46,7 +46,10 @@ export function Builder({
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
   const [expand, setExpand] = useState(false);
+  const [feedback, setFeedback] = useState("");
   const initialized = useRef(false);
+  const controlsRef = useRef<HTMLDivElement>(null);
+  const feedbackTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
     if (initialized.current) return;
     initialized.current = true;
@@ -76,19 +79,33 @@ export function Builder({
   useEffect(() => {
     if (ready) localStorage.setItem("luma-builder", JSON.stringify(config));
   }, [config, ready]);
+  useEffect(
+    () => () => {
+      if (feedbackTimer.current) clearTimeout(feedbackTimer.current);
+    },
+    [],
+  );
   function update(next: Configuration) {
     try {
       priceConfiguration(next, catalog, false);
       setConfig(next);
       setError("");
+      return true;
     } catch (e) {
       setError((e as Error).message);
+      return false;
     }
   }
   function go(n: number) {
     const q = new URLSearchParams(params);
     q.set("step", String(n));
     router.push("/qutunu-yarat?" + q, { scroll: false });
+    if (window.matchMedia("(max-width: 767px)").matches) {
+      window.setTimeout(
+        () => controlsRef.current?.scrollIntoView({ behavior: "smooth" }),
+        80,
+      );
+    }
   }
   let total = 0,
     units = 0;
@@ -103,7 +120,22 @@ export function Builder({
     const current = items.find((i) => i.productId === id);
     if (current) current.quantity += delta;
     else if (delta > 0) items.push({ productId: id, quantity: 1 });
-    update({ ...config, items: items.filter((i) => i.quantity > 0) });
+    const changed = update({
+      ...config,
+      items: items.filter((i) => i.quantity > 0),
+    });
+    if (changed) {
+      const product = catalog.products.find((p) => p.id === id);
+      if (product) {
+        setFeedback(
+          delta > 0
+            ? `${product.name} əlavə edildi.`
+            : `${product.name} azaldıldı.`,
+        );
+        if (feedbackTimer.current) clearTimeout(feedbackTimer.current);
+        feedbackTimer.current = setTimeout(() => setFeedback(""), 1800);
+      }
+    }
   }
   function next() {
     if (step === 2 && !config.items.length) {
@@ -188,11 +220,17 @@ export function Builder({
               />
             </div>
             <small>
-              Bu ölçü qablaşdırma qaydasıdır; fiziki yerləşmə hesablaması deyil.
+              {Math.max(0, (box?.capacity || 0) - units) > 0
+                ? `${Math.max(0, (box?.capacity || 0) - units)} vahid yer qalıb`
+                : "Qutu doludur"}
             </small>
           </div>
         </aside>
-        <div className="builder-controls step-enter" key={step}>
+        <div
+          className="builder-controls step-enter"
+          key={step}
+          ref={controlsRef}
+        >
           <div className="step-title">
             <span>ADDIM 0{step} / 05</span>
             <h2>{titles[step - 1]}</h2>
@@ -259,6 +297,46 @@ export function Builder({
           )}
           {step === 2 && (
             <>
+              {config.items.length > 0 && (
+                <div
+                  className="selected-products"
+                  aria-label="Seçilən məhsullar"
+                >
+                  <div className="selected-products-heading">
+                    <span>QUTUDAKILAR</span>
+                    <strong>{units} vahid</strong>
+                  </div>
+                  <div className="selected-products-list">
+                    {config.items.map((item) => {
+                      const product = catalog.products.find(
+                        (candidate) => candidate.id === item.productId,
+                      );
+                      if (!product) return null;
+                      return (
+                        <div key={item.productId} className="selected-product">
+                          <img
+                            src={product.image}
+                            alt=""
+                            width="52"
+                            height="52"
+                          />
+                          <span>
+                            <strong>{product.name}</strong>
+                            <small>{item.quantity} ədəd</small>
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => changeProduct(item.productId, -1)}
+                            aria-label={`${product.name} azalt`}
+                          >
+                            <Minus size={13} />
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
               <label className="search-field">
                 <Search size={18} />
                 <input
@@ -300,7 +378,7 @@ export function Builder({
                       config.items.find((i) => i.productId === p.id)
                         ?.quantity || 0;
                     return (
-                      <article key={p.id}>
+                      <article key={p.id} className={qty ? "selected" : ""}>
                         <img
                           src={p.image}
                           alt={p.name}
@@ -532,6 +610,19 @@ export function Builder({
                 <span>{money(box?.price || 0)}</span>
               </div>
               <div className="review-line">
+                <span>Məhsullar</span>
+                <span>
+                  {money(
+                    config.items.reduce((sum, item) => {
+                      const product = catalog.products.find(
+                        (candidate) => candidate.id === item.productId,
+                      );
+                      return sum + (product?.price || 0) * item.quantity;
+                    }, 0),
+                  )}
+                </span>
+              </div>
+              <div className="review-line">
                 <span>Qablaşdırma əlavələri</span>
                 <span>
                   {money(
@@ -541,8 +632,15 @@ export function Builder({
                   )}
                 </span>
               </div>
+              <div className="review-line review-total">
+                <strong>Cəmi</strong>
+                <strong>{money(total)}</strong>
+              </div>
             </div>
           )}
+          <p className="selection-feedback" aria-live="polite">
+            {feedback}
+          </p>
           {error && (
             <div role="alert" className="error-message">
               {error}

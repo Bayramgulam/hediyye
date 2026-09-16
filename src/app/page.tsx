@@ -44,7 +44,8 @@ export default async function Home() {
             Hazır hədiyyələrə bax <ArrowRight size={17} />
           </Link>
           <div className="hero-note">
-            <span className="tiny-flower">✳</span> Birinə özəl. Tam sənin kimi.
+            <span className="tiny-flower">✳</span> 5 addım · canlı önizləmə ·
+            şəxsi mesaj
           </div>
         </div>
         <HeroArt image={s.heroImage} />
@@ -53,19 +54,6 @@ export default async function Home() {
       <div className="benefit-strip" aria-label="LUMA üstünlükləri">
         <div className="benefit-track">
           <div className="benefit-group">
-            <span>
-              <Gift size={18} /> Sənin seçdiyin detallar
-            </span>
-            <i>✦</i>
-            <span>
-              <PenLine size={18} /> Öz sözlərinlə bir mesaj
-            </span>
-            <i>✦</i>
-            <span>
-              <PackageCheck size={18} /> Zövqlə hazırlanmış qutu
-            </span>
-          </div>
-          <div className="benefit-group" aria-hidden="true">
             <span>
               <Gift size={18} /> Sənin seçdiyin detallar
             </span>
@@ -109,6 +97,10 @@ export default async function Home() {
                   key={g.id}
                   gift={g}
                   price={priceConfiguration(c, catalog, true, false).total}
+                  itemCount={g.components.reduce(
+                    (n, item) => n + item.quantity,
+                    0,
+                  )}
                   index={i}
                 />
               );

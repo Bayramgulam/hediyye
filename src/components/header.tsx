@@ -50,6 +50,7 @@ export function Header({ brand, logo }: { brand: string; logo?: string }) {
     { href: "/#nece-isleyir", label: "Necə işləyir" },
     { href: "/elaqe", label: "Əlaqə" },
   ];
+  if (pathname.startsWith("/admin")) return null;
   return (
     <>
       <div className="announcement">

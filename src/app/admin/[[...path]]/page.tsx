@@ -796,33 +796,40 @@ export default async function Page({
   return (
     <div className="admin-shell">
       <aside className="admin-nav">
-        <strong>LUMA / İDARƏETMƏ</strong>
-        {[
-          ["dashboard", "Ümumi baxış"],
-          ["orders", "Sifarişlər"],
-          ...(owner
-            ? [
-                ["products", "Məhsullar"],
-                ["categories", "Kateqoriyalar"],
-                ["packaging", "Qablaşdırma"],
-                ["collections", "Hazır hədiyyələr"],
-                ["delivery", "Çatdırılma"],
-                ["inquiries", "Müraciətlər"],
-                ["settings", "Parametrlər"],
-                ["team", "Əməkdaşlar"],
-                ["audit", "Əməliyyat jurnalı"],
-              ]
-            : []),
-        ].map(([key, name]) => (
-          <Link
-            key={key}
-            href={key === "dashboard" ? "/admin" : "/admin/" + key}
-            aria-current={section === key ? "page" : undefined}
-          >
-            {name}
+        <div className="admin-nav-head">
+          <strong>LUMA / İDARƏETMƏ</strong>
+          <Link href="/" className="admin-store-link">
+            Mağazaya bax ↗
           </Link>
-        ))}
-        <Logout />
+        </div>
+        <div className="admin-nav-links">
+          {[
+            ["dashboard", "Ümumi baxış"],
+            ["orders", "Sifarişlər"],
+            ...(owner
+              ? [
+                  ["products", "Məhsullar"],
+                  ["categories", "Kateqoriyalar"],
+                  ["packaging", "Qablaşdırma"],
+                  ["collections", "Hazır hədiyyələr"],
+                  ["delivery", "Çatdırılma"],
+                  ["inquiries", "Müraciətlər"],
+                  ["settings", "Parametrlər"],
+                  ["team", "Əməkdaşlar"],
+                  ["audit", "Əməliyyat jurnalı"],
+                ]
+              : []),
+          ].map(([key, name]) => (
+            <Link
+              key={key}
+              href={key === "dashboard" ? "/admin" : "/admin/" + key}
+              aria-current={section === key ? "page" : undefined}
+            >
+              {name}
+            </Link>
+          ))}
+          <Logout />
+        </div>
       </aside>
       <div className="admin-content">{content}</div>
     </div>

@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { money } from "@/lib/domain";
 export function GiftCard({
   gift,
   price,
+  itemCount,
   index = 0,
 }: {
   gift: {
@@ -14,6 +15,7 @@ export function GiftCard({
     occasion: string;
   };
   price: number;
+  itemCount: number;
   index?: number;
 }) {
   return (
@@ -41,6 +43,12 @@ export function GiftCard({
         <span>{money(price)}</span>
       </div>
       <p>{gift.description}</p>
+      <div className="gift-card-footer">
+        <span>{itemCount} məhsul daxildir</span>
+        <Link href={`/qutunu-yarat?gift=${gift.slug}`}>
+          Fərdiləşdir <ArrowRight size={15} />
+        </Link>
+      </div>
     </article>
   );
 }

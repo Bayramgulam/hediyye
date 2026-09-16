@@ -1,6 +1,7 @@
 import { getCatalog, getGifts } from "@/lib/catalog";
 import { emptyConfig, priceConfiguration } from "@/lib/domain";
 import { GiftCard } from "@/components/gift-card";
+import { CatalogFilters } from "@/components/catalog-filters";
 import Link from "next/link";
 export const metadata = {
   title: "Hədiyyələr",
@@ -49,50 +50,19 @@ export default async function Page({
         Hər qutuda <em>bir hiss.</em>
       </h1>
       <p>Hazır seçimlərimizdən ilham al. Öz toxunuşunu əlavə et.</p>
-      <form className="catalog-filters">
-        <label>
-          Səbəb
-          <select name="occasion" defaultValue={q.occasion || ""}>
-            <option value="">Bütün anlar</option>
-            {["Ad günü", "Təşəkkür", "Təbrik", "Kiçik jest"].map((x) => (
-              <option key={x}>{x}</option>
-            ))}
-          </select>
-        </label>
-        <label>
-          İçindəkilər
-          <select name="category" defaultValue={q.category || ""}>
-            <option value="">Hamısı</option>
-            <option value="cup">Fincanlar</option>
-            <option value="candle">Şamlar</option>
-            <option value="tea">Çay və qəhvə</option>
-            <option value="chocolate">Şokolad</option>
-          </select>
-        </label>
-        <label>
-          Maksimum qiymət
-          <input
-            name="max"
-            type="number"
-            min="0"
-            placeholder="AZN"
-            defaultValue={q.max}
-          />
-        </label>
-        <label>
-          Sıralama
-          <select name="sort" defaultValue={q.sort || ""}>
-            <option value="">Seçimlərimiz</option>
-            <option value="asc">Qiymət: artan</option>
-            <option value="desc">Qiymət: azalan</option>
-          </select>
-        </label>
-        <button className="button">Göstər</button>
-        <Link href="/hediyyeler">Təmizlə</Link>
-      </form>
+      <CatalogFilters query={q} resultCount={entries.length} />
       <div className="gift-grid">
         {entries.map(({ gift, price }, i) => (
-          <GiftCard key={gift.id} gift={gift} price={price} index={i} />
+          <GiftCard
+            key={gift.id}
+            gift={gift}
+            price={price}
+            itemCount={gift.components.reduce(
+              (n, item) => n + item.quantity,
+              0,
+            )}
+            index={i}
+          />
         ))}
       </div>
       {!entries.length && (
