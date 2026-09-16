@@ -19,11 +19,19 @@ export function StorefrontMotion({ children }: { children: ReactNode }) {
           if (media.matches) continue;
           const animation = entry.target.animate(
             [
-              { opacity: 0, transform: "translateY(32px)" },
-              { opacity: 1, transform: "translateY(0)" },
+              {
+                opacity: 0,
+                filter: "blur(7px)",
+                transform: "translateY(46px) scale(.975)",
+              },
+              {
+                opacity: 1,
+                filter: "blur(0)",
+                transform: "translateY(0) scale(1)",
+              },
             ],
             {
-              duration: 760,
+              duration: 920,
               delay: delays.get(entry.target) || 0,
               easing: "cubic-bezier(.16,1,.3,1)",
               fill: "backwards",
@@ -37,7 +45,7 @@ export function StorefrontMotion({ children }: { children: ReactNode }) {
     );
     root.current
       ?.querySelectorAll(
-        ".section-heading, .gift-card, .intro-copy, .occasion-grid > a, .steps-story > div, .packaging-story > div, .faq > div",
+        ".section-heading, .gift-card, .intro-image, .intro-copy, .occasions > h2, .occasion-grid > a, .how > div:first-child, .steps-story > div, .packaging-story > img, .packaging-story > div, .faq > div",
       )
       .forEach((el, index) => {
         delays.set(el, (index % 3) * 75);

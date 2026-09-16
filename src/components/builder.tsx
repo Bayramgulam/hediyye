@@ -29,7 +29,18 @@ export function Builder({
   const router = useRouter();
   const params = useSearchParams();
   const step = Math.max(1, Math.min(5, Number(params.get("step")) || 1));
-  const [config, setConfig] = useState<Configuration>(initial || emptyConfig());
+  const [config, setConfig] = useState<Configuration>(() => {
+    const product = params.get("product");
+    return (
+      initial ||
+      (product
+        ? {
+            ...emptyConfig(),
+            items: [{ productId: product, quantity: 1 }],
+          }
+        : emptyConfig())
+    );
+  });
   const [ready, setReady] = useState(false);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
@@ -46,11 +57,7 @@ export function Builder({
         const found = readCart().find((i) => i.id === edit);
         if (found) setConfig(found.config);
       } else if (initial) setConfig(initial);
-      else if (product)
-        setConfig({
-          ...emptyConfig(),
-          items: [{ productId: product, quantity: 1 }],
-        });
+      else if (product) setError("");
       else {
         const saved = localStorage.getItem("luma-builder");
         if (saved) {

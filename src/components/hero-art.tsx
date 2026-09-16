@@ -27,7 +27,13 @@ export function HeroArt({ image }: { image: string }) {
         y.set(0);
       }}
     >
+      <div className="studio-glow" aria-hidden="true" />
       <div className="studio-orbit" aria-hidden="true" />
+      <div className="studio-sparkles" aria-hidden="true">
+        <span>✦</span>
+        <span>✳</span>
+        <span>✦</span>
+      </div>
       <span className="studio-index">THE ART OF GIVING / 01</span>
       <motion.div
         className="studio-main"
@@ -52,17 +58,21 @@ export function HeroArt({ image }: { image: string }) {
         </div>
       </motion.div>
       <div className="studio-card studio-card-one" aria-hidden="true">
-        <img src="/images/product-0.webp" alt="" width="180" height="180" />
-        <span>01 / kiçik bir detal</span>
+        <div className="studio-float">
+          <img src="/images/product-0.webp" alt="" width="180" height="180" />
+          <span>01 / kiçik bir detal</span>
+        </div>
       </div>
       <div className="studio-card studio-card-two" aria-hidden="true">
-        <span>Sənin üçün.</span>
-        <em>
-          Çünki ən gözəl
-          <br />
-          hədiyyə, düşüncədir.
-        </em>
-        <b>♡</b>
+        <div className="studio-float">
+          <span>Sənin üçün.</span>
+          <em>
+            Çünki ən gözəl
+            <br />
+            hədiyyə, düşüncədir.
+          </em>
+          <b>♡</b>
+        </div>
       </div>
       <div className="hero-stamp">
         sənin seçimin

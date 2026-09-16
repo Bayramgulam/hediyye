@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Header } from "@/components/header";
 import { StorefrontMotion } from "@/components/storefront-motion";
+import { OpeningScene } from "@/components/opening-scene";
 import { getSettings } from "@/lib/catalog";
 import Link from "next/link";
 import "@fontsource/noto-serif/latin-400.css";
@@ -35,6 +36,7 @@ export default async function RootLayout({
   return (
     <html lang="az" data-scroll-behavior="smooth">
       <body>
+        <OpeningScene />
         <a className="skip" href="#main">
           Məzmuna keç
         </a>

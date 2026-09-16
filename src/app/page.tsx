@@ -50,16 +50,35 @@ export default async function Home() {
         <HeroArt image={s.heroImage} />
         <span className="hero-bottom">HƏR DETALDA BİR DÜŞÜNCƏ</span>
       </section>
-      <div className="benefit-strip">
-        <span>
-          <Gift size={18} /> Sənin seçdiyin detallar
-        </span>
-        <span>
-          <PenLine size={18} /> Öz sözlərinlə bir mesaj
-        </span>
-        <span>
-          <PackageCheck size={18} /> Zövqlə hazırlanmış qutu
-        </span>
+      <div className="benefit-strip" aria-label="LUMA üstünlükləri">
+        <div className="benefit-track">
+          <div className="benefit-group">
+            <span>
+              <Gift size={18} /> Sənin seçdiyin detallar
+            </span>
+            <i>✦</i>
+            <span>
+              <PenLine size={18} /> Öz sözlərinlə bir mesaj
+            </span>
+            <i>✦</i>
+            <span>
+              <PackageCheck size={18} /> Zövqlə hazırlanmış qutu
+            </span>
+          </div>
+          <div className="benefit-group" aria-hidden="true">
+            <span>
+              <Gift size={18} /> Sənin seçdiyin detallar
+            </span>
+            <i>✦</i>
+            <span>
+              <PenLine size={18} /> Öz sözlərinlə bir mesaj
+            </span>
+            <i>✦</i>
+            <span>
+              <PackageCheck size={18} /> Zövqlə hazırlanmış qutu
+            </span>
+          </div>
+        </div>
       </div>
       <section className="section">
         <div className="section-heading">
