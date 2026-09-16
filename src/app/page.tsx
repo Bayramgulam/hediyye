@@ -9,6 +9,7 @@ import {
 import { getCatalog, getGifts, getSettings } from "@/lib/catalog";
 import { emptyConfig, priceConfiguration } from "@/lib/domain";
 import { GiftCard } from "@/components/gift-card";
+import { HeroArt } from "@/components/hero-art";
 export default async function Home() {
   const [catalog, gifts, s] = await Promise.all([
     getCatalog(),
@@ -23,11 +24,17 @@ export default async function Home() {
             <span /> DÜŞÜNÜLƏRƏK SEÇİLƏN HƏDİYYƏLƏR
           </span>
           <h1>
-            Bir qutu.
-            <br />
-            İçində <em>sənin</em>
-            <br />
-            seçdiklərin.
+            <span className="title-mask">
+              <span>Bir qutu.</span>
+            </span>
+            <span className="title-mask">
+              <span>
+                İçində <em>sənin</em>
+              </span>
+            </span>
+            <span className="title-mask">
+              <span>seçdiklərin.</span>
+            </span>
           </h1>
           <p>{s.heroText}</p>
           <Link className="button" href="/qutunu-yarat">
@@ -40,24 +47,7 @@ export default async function Home() {
             <span className="tiny-flower">✳</span> Birinə özəl. Tam sənin kimi.
           </div>
         </div>
-        <div className="hero-art">
-          <img
-            src={s.heroImage}
-            alt="Bordo lentli açıq hədiyyə qutusu: fincan, şam, şokolad və çay"
-            fetchPriority="high"
-            width="1536"
-            height="1024"
-          />
-          <div className="art-label">
-            <span>Seç. Birləşdir. Sevindir.</span>
-            <small>LUMA GIFTING STUDIO</small>
-          </div>
-          <div className="hero-stamp">
-            sənin seçimin
-            <br />
-            <span>onun sevinci</span>
-          </div>
-        </div>
+        <HeroArt image={s.heroImage} />
         <span className="hero-bottom">HƏR DETALDA BİR DÜŞÜNCƏ</span>
       </section>
       <div className="benefit-strip">

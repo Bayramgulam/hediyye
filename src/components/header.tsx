@@ -71,7 +71,9 @@ export function Header({ brand, logo }: { brand: string; logo?: string }) {
             aria-label={`Səbət, ${count} qutu`}
           >
             <ShoppingBag size={21} />
-            <span>{count}</span>
+            <span key={count} className="cart-count" aria-live="polite">
+              {count}
+            </span>
           </Link>
           <button
             className="menu-toggle icon-button"

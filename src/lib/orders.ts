@@ -12,6 +12,30 @@ import {
 } from "./domain";
 import { hash } from "./security";
 import { cashPayment } from "./payments";
+
+export async function cleanupExpiredReservations() {
+  const orders = await db.order.findMany({
+    where: { status: "NEW", expiresAt: { lt: new Date() } },
+    select: { id: true },
+    take: 100,
+  });
+  let cleaned = 0;
+  for (const order of orders) {
+    try {
+      await changeStatus(
+        order.id,
+        "CANCELLED",
+        "reservation-cleanup",
+        "Təsdiqlənmə müddəti bitdi.",
+        true,
+      );
+      cleaned += 1;
+    } catch {
+      console.error("Reservation cleanup needs retry", order.id);
+    }
+  }
+  return cleaned;
+}
 export const checkoutSchema = z.object({
   idempotencyKey: z.string().uuid(),
   items: z

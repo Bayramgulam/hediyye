@@ -10,9 +10,26 @@ An order transaction reloads all selected data, checks packaging/capacity/compat
 
 Tracking links contain a 256-bit HMAC derived from a random checkout UUID using the server secret. Only the token hash is stored. The HMAC allows an idempotent retry to return the same tracking link without storing plaintext tokens. Keep the secret stable and backed up; rotating it invalidates sessions and prevents regeneration of previous idempotent links, although existing links still validate against their stored hashes. Public tracking only selects reference, state, payment state, total and status timestamps. No customer/address/card information is returned.
 
-## Deployment target
+## Docker-free deployment: Netlify + Neon
 
-Use the included Dockerfile on a Node-capable host with PostgreSQL and S3-compatible media. No deployment has been made and no paid service is required by the source. Suggested sequence:
+This is the lowest-maintenance launch path for the existing full-stack app. Netlify runs Next.js SSR, route handlers and the scheduled cleanup function; Neon supplies PostgreSQL. The repository includes `netlify.toml`, and the production build applies committed Prisma migrations before compiling the app.
+
+1. Create a Neon project in a nearby region and copy its **pooled** connection URL. Keep `sslmode=require` in the URL.
+2. Import the GitHub repository in Netlify. Use the repository configuration; do not override the build command or publish directory.
+3. Add `DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL` and `NEXT_PUBLIC_SITE_URL` in Netlify. The two URL values must exactly match the final HTTPS origin.
+4. Deploy. The first build runs `prisma migrate deploy`, generates Prisma Client and builds Next.js.
+5. With the same production `DATABASE_URL` set only in a local terminal, run `npm run db:seed` once and then `npm run admin:bootstrap` with temporary `ADMIN_EMAIL` and `ADMIN_PASSWORD` variables.
+6. Open `/admin`, replace the illustrative merchant content, configure fulfillment/payment settings and run a real rehearsal order.
+
+Netlify runs reservation cleanup every five minutes. The notification scheduler also runs every five minutes but exits immediately unless `NOTIFICATION_WEBHOOK_URL` is configured. Both jobs are idempotent. Scheduled functions execute only on published production deploys.
+
+The bundled catalog images can be used for the first launch. Admin media uploads still require S3-compatible object storage. Cloudflare R2 works with the existing `S3_*` variables; set `MEDIA_PUBLIC_URL` to the bucket's public delivery origin. Until object storage is configured, keep using checked-in `/images/*` assets and do not upload from admin.
+
+Neon and Netlify free tiers have finite usage and storage limits. Set usage alerts in both dashboards. Keep a database export outside the provider before major catalog or schema changes.
+
+## Container deployment target
+
+Use the included Dockerfile when moving to a Node-capable host with PostgreSQL and S3-compatible media. Suggested sequence:
 
 1. Provision a private PostgreSQL database and set a unique password. Use a connection URL with TLS according to the provider.
 2. Set all production environment variables. `BETTER_AUTH_URL` and `NEXT_PUBLIC_SITE_URL` must be the exact HTTPS origin. Never expose `BETTER_AUTH_SECRET` to browser code.

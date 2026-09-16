@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 const config: NextConfig = {
-  output: "standalone",
+  ...(process.env.NETLIFY ? {} : { output: "standalone" as const }),
   poweredByHeader: false,
   async headers() {
     return [

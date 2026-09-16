@@ -1598,6 +1598,357 @@ footer {
     transform: translateY(0) rotate(0);
   }
 }
+@keyframes title-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(105%) rotate(2deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(0);
+  }
+}
+@keyframes studio-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(42px) scale(0.94) rotate(-2deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(0);
+  }
+}
+@keyframes orbit-breathe {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) rotate(-8deg) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(5deg) scale(1.04);
+  }
+}
+@keyframes cart-pop {
+  0% {
+    transform: scale(0.65);
+  }
+  65% {
+    transform: scale(1.18);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.motion-surface {
+  min-height: 30vh;
+}
+.title-mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.05em;
+  margin-bottom: -0.05em;
+}
+.title-mask > span {
+  display: block;
+  animation: title-reveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.title-mask:nth-child(2) > span {
+  animation-delay: 0.09s;
+}
+.title-mask:nth-child(3) > span {
+  animation-delay: 0.18s;
+}
+.hero-copy > .eyebrow,
+.hero-copy > p,
+.hero-copy > .button,
+.hero-copy > .text-link,
+.hero-note {
+  animation: reveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.hero-copy > p {
+  animation-delay: 0.22s;
+}
+.hero-copy > .button {
+  animation-delay: 0.3s;
+}
+.hero-copy > .text-link,
+.hero-note {
+  animation-delay: 0.38s;
+}
+.studio-art {
+  isolation: isolate;
+  perspective: 1100px;
+  overflow: visible;
+}
+.studio-main {
+  position: absolute;
+  inset: 7% 8% 8% 10%;
+  overflow: hidden;
+  background: #e9dfd3;
+  box-shadow: 0 30px 70px #3d202219;
+  transform-style: preserve-3d;
+  animation: studio-arrive 1s 0.12s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.studio-main > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  mix-blend-mode: multiply;
+  transform: scale(1.025);
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.studio-art:hover .studio-main > img {
+  transform: scale(1.075);
+}
+.studio-orbit {
+  position: absolute;
+  z-index: -1;
+  width: 84%;
+  aspect-ratio: 1;
+  left: 51%;
+  top: 51%;
+  border: 1px solid #9d776c55;
+  border-radius: 50%;
+  animation: orbit-breathe 10s ease-in-out infinite;
+}
+.studio-orbit::before,
+.studio-orbit::after {
+  content: "";
+  position: absolute;
+  inset: 10%;
+  border: 1px solid #9d776c35;
+  border-radius: 50%;
+}
+.studio-orbit::after {
+  inset: 21%;
+}
+.studio-index,
+.studio-caption {
+  position: absolute;
+  z-index: 4;
+  font-size: 7px;
+  letter-spacing: 0.19em;
+  color: #796a62;
+}
+.studio-index {
+  left: 0;
+  top: 1%;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+.studio-caption {
+  right: 8%;
+  bottom: 2.5%;
+}
+.studio-image-note {
+  position: absolute;
+  left: 7%;
+  bottom: 7%;
+  display: flex;
+  flex-direction: column;
+  padding: 13px 18px;
+  background: #f7f3ecea;
+  backdrop-filter: blur(8px);
+  color: #332925;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.studio-image-note em {
+  font-family: "Noto Serif", Georgia, serif;
+  font-size: 21px;
+  letter-spacing: -0.04em;
+  text-transform: none;
+}
+.studio-star {
+  position: absolute;
+  right: -17px;
+  top: -17px;
+  color: #642c3b;
+  font-size: 25px;
+}
+.studio-card {
+  position: absolute;
+  z-index: 3;
+  background: #f9f5ee;
+  box-shadow: 0 18px 45px #41272b20;
+  animation: studio-arrive 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.studio-card-one {
+  left: -1%;
+  bottom: 1%;
+  width: 126px;
+  padding: 8px;
+  transform: rotate(-6deg);
+  animation-delay: 0.34s;
+}
+.studio-card-one img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  mix-blend-mode: multiply;
+}
+.studio-card-one span {
+  display: block;
+  font-size: 7px;
+  letter-spacing: 0.1em;
+  padding: 7px 3px 1px;
+}
+.studio-card-two {
+  right: -2%;
+  top: 10%;
+  width: 145px;
+  min-height: 135px;
+  padding: 20px 17px;
+  transform: rotate(4deg);
+  animation-delay: 0.42s;
+}
+.studio-card-two span {
+  font-size: 8px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+.studio-card-two em {
+  display: block;
+  margin-top: 16px;
+  font:
+    italic 15px/1.35 "Noto Serif",
+    Georgia,
+    serif;
+}
+.studio-card-two b {
+  position: absolute;
+  right: 13px;
+  bottom: 8px;
+  color: #642c3b;
+  font-size: 18px;
+}
+.studio-art .hero-stamp {
+  z-index: 5;
+  right: 2%;
+  top: 61%;
+  background: #f7f3ece6;
+  backdrop-filter: blur(7px);
+}
+.button {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: #35151f;
+  transform: translateX(-102%);
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.button:hover::before {
+  transform: translateX(0);
+}
+.button svg,
+.text-link svg,
+.round-arrow svg {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.button:hover svg,
+.text-link:hover svg,
+.gift-image:hover .round-arrow svg {
+  transform: translate(3px, -3px);
+}
+.gift-card {
+  transform-origin: 50% 100%;
+}
+.gift-image {
+  transition:
+    transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.55s ease;
+}
+.gift-card:hover .gift-image {
+  transform: translateY(-7px) rotate(-0.6deg);
+  box-shadow: 0 22px 50px #43252b16;
+}
+.occasion-grid > a {
+  transition:
+    background 0.35s ease,
+    color 0.35s ease,
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.occasion-grid > a:hover {
+  transform: translateY(-6px);
+}
+.cart-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: #642c3b;
+  color: #fff8f1;
+  animation: cart-pop 0.42s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.step-enter {
+  animation: reveal 0.46s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@media (max-width: 1100px) {
+  .studio-card-one {
+    width: 100px;
+  }
+  .studio-card-two {
+    width: 120px;
+    min-height: 110px;
+    padding: 15px;
+  }
+  .studio-card-two em {
+    font-size: 12px;
+    margin-top: 10px;
+  }
+}
+@media (max-width: 767px) {
+  .studio-art {
+    aspect-ratio: 1.03;
+    overflow: hidden;
+  }
+  .studio-main {
+    inset: 7% 7% 11%;
+  }
+  .studio-card-one {
+    left: 2%;
+    bottom: 3%;
+    width: 88px;
+  }
+  .studio-card-two {
+    right: 1%;
+    top: 4%;
+    width: 108px;
+    min-height: 94px;
+    padding: 12px;
+  }
+  .studio-card-two span,
+  .studio-card-one span {
+    font-size: 6px;
+  }
+  .studio-card-two em {
+    font-size: 11px;
+    margin-top: 8px;
+  }
+  .studio-image-note {
+    left: 6%;
+    bottom: 8%;
+    padding: 9px 11px;
+  }
+  .studio-image-note em {
+    font-size: 15px;
+  }
+  .studio-index,
+  .studio-caption {
+    display: none;
+  }
+  .studio-art .hero-stamp {
+    top: 60%;
+    right: 5%;
+  }
+}
 @media (min-width: 1600px) {
   .hero {
     min-height: 760px;

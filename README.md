@@ -65,7 +65,20 @@ Database tests and E2E create explicitly fictional test records and temporary ra
 
 ## Operations and deployment
 
-See [operations](docs/OPERATIONS.md) for Docker deployment, media storage, jobs, backup/restore, authentication and production requirements. The app has not been publicly deployed. Source is prepared for a Node container behind an HTTPS reverse proxy.
+For a Docker-free launch, connect this repository to Netlify and use a Neon PostgreSQL database. The checked-in `netlify.toml` builds the current Next.js App Router application, applies committed Prisma migrations and schedules reservation cleanup. Netlify's generated HTTPS URL must be used for both `BETTER_AUTH_URL` and `NEXT_PUBLIC_SITE_URL`.
+
+Required Netlify environment variables:
+
+```text
+DATABASE_URL=<Neon pooled connection URL with sslmode=require>
+BETTER_AUTH_SECRET=<at least 32 cryptographically random characters>
+BETTER_AUTH_URL=https://your-site.netlify.app
+NEXT_PUBLIC_SITE_URL=https://your-site.netlify.app
+```
+
+After the first successful deploy, load the starter catalog once with the production `DATABASE_URL` set locally: `npm run db:seed`. Then create the first owner with `ADMIN_EMAIL`, `ADMIN_PASSWORD` and `npm run admin:bootstrap`. Do not put the admin password in Netlify environment variables.
+
+See [operations](docs/OPERATIONS.md) for the complete Netlify/Neon procedure, media storage, jobs, backup/restore, authentication and production requirements. No public deployment is performed automatically because the hosting accounts and production secrets remain under the merchant's control.
 
 ## Merchant setup before launch
 

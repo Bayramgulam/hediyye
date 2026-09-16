@@ -175,7 +175,7 @@ export function Builder({
             </small>
           </div>
         </aside>
-        <div className="builder-controls">
+        <div className="builder-controls step-enter" key={step}>
           <div className="step-title">
             <span>ADDIM 0{step} / 05</span>
             <h2>{titles[step - 1]}</h2>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Header } from "@/components/header";
+import { StorefrontMotion } from "@/components/storefront-motion";
 import { getSettings } from "@/lib/catalog";
 import Link from "next/link";
 import "@fontsource/noto-serif/latin-400.css";
@@ -38,7 +39,9 @@ export default async function RootLayout({
           Məzmuna keç
         </a>
         <Header brand={s.brand} logo={s.logo} />
-        <main id="main">{children}</main>
+        <main id="main">
+          <StorefrontMotion>{children}</StorefrontMotion>
+        </main>
         <footer>
           <div className="footer-top">
             <div>
