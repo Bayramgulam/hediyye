@@ -5,11 +5,12 @@ import { randomUUID } from "node:crypto";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import { getAuthUrl } from "@/lib/site-url";
 export async function POST(r: Request) {
   try {
     await requireRole(true);
     if (
-      r.headers.get("origin") !== new URL(process.env.BETTER_AUTH_URL!).origin
+      r.headers.get("origin") !== getAuthUrl()
     )
       throw Error("FORBIDDEN");
     if (Number(r.headers.get("content-length")) > 6 * 1024 * 1024)

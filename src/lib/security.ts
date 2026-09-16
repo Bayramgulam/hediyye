@@ -1,10 +1,11 @@
 import { createHash } from "node:crypto";
 import { db } from "./db";
+import { getAuthUrl } from "./site-url";
 export const hash = (s: string) => createHash("sha256").update(s).digest("hex");
 export async function readBody(request: Request) {
   if (
     request.headers.get("origin") !==
-    new URL(process.env.BETTER_AUTH_URL || "http://localhost:3000").origin
+    getAuthUrl()
   )
     throw Error("FORBIDDEN");
   if (Number(request.headers.get("content-length")) > 32768)

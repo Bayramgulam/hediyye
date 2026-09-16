@@ -2,7 +2,9 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { headers } from "next/headers";
 import { db } from "./db";
+import { getAuthUrl } from "./site-url";
 export const auth = betterAuth({
+  baseURL: getAuthUrl(),
   database: prismaAdapter(db, { provider: "postgresql" }),
   emailAndPassword: {
     enabled: true,

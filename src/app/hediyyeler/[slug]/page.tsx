@@ -1,5 +1,6 @@
 import { getCatalog, getGifts } from "@/lib/catalog";
 import { emptyConfig, money, priceConfiguration } from "@/lib/domain";
+import { getSiteUrl } from "@/lib/site-url";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 export async function generateMetadata({
@@ -20,6 +21,7 @@ export default async function Page({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+  const siteUrl = getSiteUrl();
   const [catalog, gifts] = await Promise.all([getCatalog(), getGifts()]);
   const g = gifts.find((g) => g.slug === slug);
   if (!g) notFound();
@@ -45,20 +47,13 @@ export default async function Page({
               "@type": "Product",
               name: g.name,
               description: g.description,
-              image: new URL(
-                g.image,
-                process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
-              ).toString(),
+              image: new URL(g.image, siteUrl).toString(),
               offers: {
                 "@type": "Offer",
                 priceCurrency: "AZN",
                 price: (priced.total / 100).toFixed(2),
                 availability: "https://schema.org/InStock",
-                url:
-                  (process.env.NEXT_PUBLIC_SITE_URL ||
-                    "http://localhost:3000") +
-                  "/hediyyeler/" +
-                  g.slug,
+                url: siteUrl + "/hediyyeler/" + g.slug,
               },
             }).replace(/</g, "\\u003c"),
           }}

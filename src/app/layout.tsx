@@ -3,6 +3,7 @@ import { Header } from "@/components/header";
 import { StorefrontMotion } from "@/components/storefront-motion";
 import { OpeningScene } from "@/components/opening-scene";
 import { getSettings } from "@/lib/catalog";
+import { getSiteUrl } from "@/lib/site-url";
 import Link from "next/link";
 import "@fontsource/noto-serif/latin-400.css";
 import "@fontsource/noto-serif/latin-ext-400.css";
@@ -13,9 +14,7 @@ import "@fontsource/noto-sans/latin-ext-400.css";
 import "./globals.css";
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
-  ),
+  metadataBase: new URL(getSiteUrl()),
   title: {
     default: "LUMA — Düşünülərək seçilən hədiyyələr",
     template: "%s · LUMA",
